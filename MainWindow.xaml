@@ -1,0 +1,30 @@
+﻿<Window x:Class="FloatingClock.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FloatingClock"
+        xmlns:properties="clr-namespace:FloatingClock.Properties"
+        mc:Ignorable="d"
+        Title="FloatingClock" Height="120" Width="120"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="{Binding Source={x:Static properties:Settings.Default}, Path=AlwaysOnTop}"
+        Top="{Binding Source={x:Static properties:Settings.Default}, Path=WindowTop, Mode=TwoWay}"
+        Left="{Binding Source={x:Static properties:Settings.Default}, Path=WindowLeft, Mode=TwoWay}"
+        MouseRightButtonDown="Handle_RightButtonDown"
+        MouseLeftButtonDown="Handle_LeftButtonDown"
+        ContentRendered="Handle_ContentRendered"
+        Closing="Handle_Closing"
+        >
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Always on Top" IsCheckable="True" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=AlwaysOnTop}"/>
+            <MenuItem Header="About" Click="Handle_About"/>
+            <MenuItem Header="Exit" Click="Handle_Exit"/>
+        </ContextMenu>
+    </Window.ContextMenu>
+    <local:Clock x:Name="Clock"/>
+</Window>
