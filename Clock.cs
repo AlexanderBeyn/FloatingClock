@@ -65,10 +65,10 @@ namespace FloatingClock
 
         private double size = 0;
 
-        private const int hourWidth = 4;
-        private const int minuteWidth = 2;
-        private const int secondWidth = 1;
-        private const double hourScale = 0.33;
+        private const double hourWidth = 2;
+        private const double minuteWidth = 2;
+        private const double secondWidth = 0.5;
+        private const double hourScale = 0.3;
         private const double minuteScale = 0.45;
         private const double secondScale = 0.45;
         private const double tailScale = 0.075;
@@ -76,6 +76,8 @@ namespace FloatingClock
         private UIElement hourHand;
         private UIElement minuteHand;
         private UIElement secondHand;
+        private Label date;
+        private Label day;
 
         private readonly Timer timer = new Timer();
 
@@ -102,6 +104,9 @@ namespace FloatingClock
             hourHand.RenderTransform = new RotateTransform(hours * 30, hourWidth / 2, size * hourScale);
             minuteHand.RenderTransform = new RotateTransform(minutes * 6, minuteWidth / 2, size * minuteScale);
             secondHand.RenderTransform = new RotateTransform(seconds * 6, secondWidth / 2, size * secondScale);
+
+            date.Content = time;
+            day.Content = time;
         }
 
 
@@ -144,13 +149,40 @@ namespace FloatingClock
             }
         }
 
+        private void DrawDate()
+        {
+            date = new Label
+            {
+                Content = DateTime.Now,
+                ContentStringFormat = "MMM d",
+            };
+
+            Children.Add(date);
+            date.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
+
+            SetLeft(date, (size - date.DesiredSize.Width) / 2);
+            SetTop(date, size / 3 - date.DesiredSize.Height / 2);
+
+            day = new Label
+            {
+                Content = DateTime.Now,
+                ContentStringFormat = "dddd",
+            };
+
+            Children.Add(day);
+            day.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
+
+            SetLeft(day, (size - day.DesiredSize.Width) / 2);
+            SetTop(day, size / 3 * 2 - day.DesiredSize.Height / 2);
+        }
+
         private void DrawHands()
         {
             hourHand = new Rectangle
             {
                 Width = hourWidth,
                 Height = size * hourScale + size * tailScale,
-                Fill = HandsColor,
+                Fill = HandsColor,               
             };
             Canvas.SetTop(hourHand, size / 2 - (size * hourScale));
             Canvas.SetLeft(hourHand, (size - hourWidth) / 2);
@@ -192,6 +224,7 @@ namespace FloatingClock
 
                 DrawFace();
                 DrawHands();
+                DrawDate();
                 UpdateTime();
             }
 
